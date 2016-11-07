@@ -1,0 +1,12 @@
+{
+   "name": "pmmp/pocketmine-mp",
+   "description": "Free server software for Minecraft PE with great customisability",
+   "type": "project",
+   "homepage": "https://pmmp.gq",
+   "license": "LGPL-3.0",
+   "require" : {
+      "php": ">=7.0",
+      "ext-pthreads": "3.1.6",
+      "mdanter/ecc": "*"
+   }
+}
