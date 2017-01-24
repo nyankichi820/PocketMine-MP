@@ -196,6 +196,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	protected $forceMovement = null;
 	/** @var Vector3 */
 	protected $teleportPosition = null;
+	protected $mwPosition = null; //TODO: Remove this multi-world hack (broken client MCPE 1.0.0)
 	protected $connected = true;
 	protected $ip;
 	protected $removeFormat = true;
@@ -687,6 +688,10 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$pk->time = $this->level->getTime();
 			$pk->started = $this->level->stopTime == false;
 			$this->dataPacket($pk);
+
+			//TODO: Remove this multi-world hack (broken client MCPE 1.0.0)
+			$moveDist = $this->viewDistance * 2 * 16 * 2; //Make sure we are 100% out of the way (radius * 2 (diameter) * 16 (blocks) * 2 (for good measure))
+			$this->mwPosition = $this->add($moveDist, 0, $moveDist);
 		}
 	}
 
@@ -1959,7 +1964,10 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					$this->forceMovement = new Vector3($this->x, $this->y, $this->z);
 				}
 
-				if($this->teleportPosition !== null or ($this->forceMovement instanceof Vector3 and ($newPos->distanceSquared($this->forceMovement) > 0.1 or $revert))){
+				if($this->mwPosition instanceof Vector3){
+					//TODO: Remove this multi-world hack (broken client MCPE 1.0.0)
+					$this->sendPosition($this->mwPosition, $packet->yaw, $packet->pitch, MovePlayerPacket::MODE_RESET);
+				}elseif($this->teleportPosition !== null or ($this->forceMovement instanceof Vector3 and ($newPos->distanceSquared($this->forceMovement) > 0.1 or $revert))){
 					$this->sendPosition($this->forceMovement, $packet->yaw, $packet->pitch, MovePlayerPacket::MODE_RESET);
 				}else{
 					$packet->yaw %= 360;
@@ -3485,6 +3493,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->spawnToAll();
 			$this->forceMovement = $this->teleportPosition;
 			$this->teleportPosition = null;
+			$this->mwPosition = null; //TODO: Remove this multi-world hack (broken client MCPE 1.0.0)
 
 			return true;
 		}
