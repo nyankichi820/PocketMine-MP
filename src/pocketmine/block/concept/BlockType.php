@@ -30,6 +30,14 @@ use pocketmine\math\AxisAlignedBB;
 
 class BlockType{
 
+	/** @var \SplFixedArray */
+	public static $list = null;
+
+	public static function init(){
+		self::$list = new \SplFixedArray(256);
+		//TODO: init blocks
+	}
+
 	protected $uniqueName;
 	protected $translationKey;
 	protected $fallbackName;
@@ -37,12 +45,18 @@ class BlockType{
 	protected $id;
 	protected $meta;
 
-	protected $solid;
-	protected $transparent;
-	protected $hardness;
-	protected $blastResistance;
+	protected $solid = true;
+	protected $transparent = false;
+	protected $hardness = 1;
+	protected $blastResistance = 5;
 
+	/** @var AxisAlignedBB */
 	protected $boundingBox;
+
+	public function __construct(int $id, int $meta = 0){
+		$this->id = $id;
+		$this->meta = $meta;
+	}
 
 	/**
 	 * Returns the block type's unique name as per the /give command.
@@ -98,6 +112,10 @@ class BlockType{
 		return $this->solid;
 	}
 
+	public function setSolid(bool $solid = true){
+		$this->solid = $solid;
+	}
+
 	/**
 	 * Returns whether light will pass through any part of this block type.
 	 *
@@ -107,13 +125,21 @@ class BlockType{
 		return $this->transparent;
 	}
 
+	public function setTransparent(bool $transparent = true){
+		$this->transparent = $transparent;
+	}
+
 	/**
-	 * Returns the hardness value of this block type. Used to calculate block break times.
+	 * Returns the hardness value of this block type. Used to calculate block break times. If the block is indestructible, this may return -1.
 	 *
 	 * @return float
 	 */
 	public function getHardness() : float{
 		return $this->hardness;
+	}
+
+	public function setHardness(float $hardness){
+		$this->hardness = $hardness;
 	}
 
 	/**
@@ -123,6 +149,10 @@ class BlockType{
 	 */
 	public function getBlastResistance() : float{
 		return $this->blastResistance;
+	}
+
+	public function setBlastResistance(float $resistance){
+		$this->blastResistance = $resistance;
 	}
 
 	/**
