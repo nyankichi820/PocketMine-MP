@@ -1,12 +1,20 @@
 {
    "name": "pmmp/pocketmine-mp",
-   "description": "Free server software for Minecraft PE with great customisability",
+   "description": "A server software for Minecraft: Pocket Edition written in PHP",
    "type": "project",
-   "homepage": "https://pmmp.gq",
+   "homepage": "https://pmmp.io",
    "license": "LGPL-3.0",
-   "require" : {
+   "require": {
       "php": ">=7.0",
-      "ext-pthreads": "3.1.6",
-      "mdanter/ecc": "*"
+      "ext-curl": "*",
+      "ext-json": "*",
+      "ext-mbstring": "*",
+      "ext-openssl": "*",
+      "ext-pthreads": ">=3.1.6",
+      "ext-sockets": "*",
+      "ext-sqlite3": "*",
+      "ext-weakref": ">=0.3.2",
+      "ext-yaml": ">=2.0.0",
+      "ext-zlib": ">=1.2.8"
    }
 }
