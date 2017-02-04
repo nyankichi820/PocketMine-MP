@@ -34,7 +34,8 @@ mv DevTools.phar plugins
 
 echo -e "version\nplugins\nstop\n" | "$PHP_BINARY" PocketMine-MP.phar --no-wizard --disable-ansi --disable-readline --debug.level=2
 
-if [ $? -ne 0 ]; then
-	echo PocketMine-MP phar test exited with code $?
+result=$?
+if [ $result -ne 0 ]; then
+	echo PocketMine-MP phar test exited with code $result
 	exit 1
 fi
