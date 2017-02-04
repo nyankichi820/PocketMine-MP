@@ -17,14 +17,24 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-cp -r tests/plugins plugins
-"$PHP_BINARY" ./plugins/PocketMine-DevTools/src/DevTools/ConsoleScript.php --make ./plugins/PocketMine-DevTools --relative ./plugins/PocketMine-DevTools --out ./plugins/DevTools.phar
-rm -rf ./plugins/PocketMine-DevTools
+cd tests/plugins
+"$PHP_BINARY" ./PocketMine-DevTools/src/DevTools/ConsoleScript.php --make ./PocketMine-DevTools --relative ./PocketMine-DevTools --out ../../DevTools.phar
+cd ../..
 
-echo -e "version\nmakeserver\nstop\n" | "$PHP_BINARY" src/pocketmine/PocketMine.php --no-wizard --disable-ansi --disable-readline --debug.level=2
-if ls plugins/DevTools/PocketMine*.phar >/dev/null 2>&1; then
+"$PHP_BINARY" DevTools.phar --make src,vendor --relative ./ --entry src/pocketmine/PocketMine.php --out PocketMine-MP.phar
+if [ -f PocketMine-MP.phar ]; then
     echo Server phar created successfully.
 else
-    echo No phar created!
+    echo Server phar was not created!
     exit 1
+fi
+
+mkdir plugins
+mv DevTools.phar plugins
+
+echo -e "version\nplugins\nstop\n" | "$PHP_BINARY" PocketMine-MP.phar --no-wizard --disable-ansi --disable-readline --debug.level=2
+
+if [ $? -ne 0 ]; then
+	echo PocketMine-MP phar test exited with code $?
+	exit 1
 fi
